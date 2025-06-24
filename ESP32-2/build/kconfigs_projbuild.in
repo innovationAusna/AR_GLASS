@@ -1,0 +1,8 @@
+source "D:/ESP-IDF-container/v5.4.1/esp-idf/components/bootloader/Kconfig.projbuild"
+source "D:/ESP-IDF-container/v5.4.1/esp-idf/components/esp_app_format/Kconfig.projbuild"
+source "D:/ESP-IDF-container/v5.4.1/esp-idf/components/esp_rom/Kconfig.projbuild"
+source "D:/ESP-IDF-container/v5.4.1/esp-idf/components/esptool_py/Kconfig.projbuild"
+source "D:/ESP-IDF-container/v5.4.1/esp-idf/components/partition_table/Kconfig.projbuild"
+source "D:/AR_GLASS1/AR_glasses_ESP_code2/main/Kconfig.projbuild"
+source "D:/AR_GLASS1/AR_glasses_ESP_code2/managed_components/espressif__esp-sr/Kconfig.projbuild"
+source "D:/ESP-IDF-container/v5.4.1/esp-idf/examples/common_components/protocol_examples_common/Kconfig.projbuild"

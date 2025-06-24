@@ -1,0 +1,13 @@
+# Target labels
+ bootloader
+# Source files and their labels
+D:/AR_GLASS1/AR_glasses_ESP_code2/build/CMakeFiles/bootloader
+D:/AR_GLASS1/AR_glasses_ESP_code2/build/CMakeFiles/bootloader.rule
+D:/AR_GLASS1/AR_glasses_ESP_code2/build/CMakeFiles/bootloader-complete.rule
+D:/AR_GLASS1/AR_glasses_ESP_code2/build/bootloader-prefix/src/bootloader-stamp/bootloader-build.rule
+D:/AR_GLASS1/AR_glasses_ESP_code2/build/bootloader-prefix/src/bootloader-stamp/bootloader-configure.rule
+D:/AR_GLASS1/AR_glasses_ESP_code2/build/bootloader-prefix/src/bootloader-stamp/bootloader-download.rule
+D:/AR_GLASS1/AR_glasses_ESP_code2/build/bootloader-prefix/src/bootloader-stamp/bootloader-install.rule
+D:/AR_GLASS1/AR_glasses_ESP_code2/build/bootloader-prefix/src/bootloader-stamp/bootloader-mkdir.rule
+D:/AR_GLASS1/AR_glasses_ESP_code2/build/bootloader-prefix/src/bootloader-stamp/bootloader-patch.rule
+D:/AR_GLASS1/AR_glasses_ESP_code2/build/bootloader-prefix/src/bootloader-stamp/bootloader-update.rule

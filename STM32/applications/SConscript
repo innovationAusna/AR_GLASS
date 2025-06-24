@@ -1,0 +1,18 @@
+# applications/SConscript
+
+Import('env')
+
+# 指定此模块下的 include 搜索路径
+env.Append(
+    CPPPATH = [
+        '#/applications/include',    # # 代表工程根目录
+    ]
+)
+
+# 把 src 目录下所有 .c 文件都加入构建
+src_files = Glob('src/*.c')
+env.AddSourceFiles(env.Component(
+    name = 'user_app',
+    src  = src_files,
+    # dependencies 可以留空，或者根据需要加
+), src_files)

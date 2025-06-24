@@ -1,0 +1,7 @@
+[
+ {
+  "path": "/packages/peripherals/ssd1306", 
+  "ver": "latest", 
+  "name": "SSD1306"
+ }
+]

@@ -1,0 +1,55 @@
+{
+    "C_Cpp.intelliSenseEngine": "default",
+    "idf.espIdfPathWin": "d:\\ESP-IDF-container\\v5.4.1\\esp-idf",
+    "idf.openOcdConfigs": [
+        "board/esp32-wrover-kit-3.3v.cfg"
+    ],
+    "idf.portWin": "COM6",
+    "idf.toolsPathWin": "d:\\ESP-IDF-Tools",
+    "MicroPython.executeButton": [
+        {
+            "text": "▶",
+            "tooltip": "运行",
+            "alignment": "left",
+            "command": "extension.executeFile",
+            "priority": 3.5
+        }
+    ],
+    "MicroPython.syncButton": [
+        {
+            "text": "$(sync)",
+            "tooltip": "同步",
+            "alignment": "left",
+            "command": "extension.execute",
+            "priority": 4
+        }
+    ],
+    "files.associations": {
+        "*.cjson": "jsonc",
+        "*.wxss": "css",
+        "*.wxs": "javascript",
+        "wifi.h": "c",
+        "nvs_flash.h": "c",
+        "esp_event.h": "c",
+        "string.h": "c",
+        "wifito.h": "c",
+        "esp_log.h": "c",
+        "esp_wifi.h": "c",
+        "functional": "c",
+        "inet.h": "c",
+        "esp_wn_iface.h": "c",
+        "esp_afe_sr_models.h": "c",
+        "socket.h": "c",
+        "esp_wn_models.h": "c",
+        "model_path.h": "c",
+        "esp_mac.h": "c",
+        "esp_mn_models.h": "c",
+        "err.h": "c",
+        "protocomm_ble.h": "c",
+        "uart_send_to_stm32.h": "c",
+        "uart.h": "c",
+        "task.h": "c"
+    },
+    "idf.pythonInstallPath": "d:\\ESP-IDF-Tools\\tools\\idf-python\\3.11.2\\python.exe",
+    "idf.flashType": "UART"
+}
