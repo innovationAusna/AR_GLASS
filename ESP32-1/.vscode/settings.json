@@ -1,0 +1,36 @@
+{
+  "C_Cpp.intelliSenseEngine": "default",
+  "idf.espIdfPathWin": "d:\\esp-idf\\esp\\v5.4.1\\esp-idf",
+  "idf.toolsPathWin": "d:\\esp-idf\\.espressif",
+  "idf.pythonInstallPath": "d:\\esp-idf\\.espressif\\tools\\idf-python\\3.11.2\\python.exe",
+  "files.associations": {
+    "esp_log.h": "c",
+    "stdint.h": "c",
+    "esp_gatt_common_api.h": "c",
+    "esp_gatts_api.h": "c",
+    "task.h": "c",
+    "freertos.h": "c",
+    "esp_bt.h": "c",
+    "esp_system.h": "c",
+    "esp_gap_ble_api.h": "c",
+    "string.h": "c",
+    "navigator.h": "c",
+    "stdio.h": "c",
+    "teleprompter.h": "c",
+    "uart_send_to_stm32.h": "c",
+    "format": "c",
+    "receive.h": "c",
+    "esp_http_client.h": "c",
+    "cjson.h": "c",
+    "esp_event.h": "c",
+    "nvs_flash.h": "c"
+  },
+  "idf.openOcdConfigs": [
+    "board/esp32s3-builtin.cfg"
+  ],
+  "idf.customExtraVars": {
+    "IDF_TARGET": "esp32s3"
+  },
+  "idf.flashType": "UART",
+  "idf.portWin": "COM13"
+}

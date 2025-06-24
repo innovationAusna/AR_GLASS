@@ -1,0 +1,2 @@
+source D:/esp32-s3/AR/AR_GLASS/AR_GLASS/build/bootloader/gdbinit/symbols
+source D:/esp32-s3/AR/AR_GLASS/AR_GLASS/build/bootloader/gdbinit/connect

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Network Configuration</title>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Security-Policy" content="referrer no-referrer">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <style type="text/css">
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f0f0f0; }
+        label { display: block; margin-bottom: 5px; }
+        input { width: 100%; padding: 5px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 3px; }
+        input[type="submit"] { background-color: #007bff; color: #fff; border: none; border-radius: 3px; padding: 10px; cursor: pointer; }
+        input[type="submit"]:hover { background-color: #0056b3; }
+        input[type="submit"]:disabled { background-color: #ccc; cursor: not-allowed; }
+        #ap_list { margin-top: 20px; border-top: 1px solid #ccc; padding-top: 10px; }
+        #ap_list a { display: block; margin-top: 5px; color: #007bff; text-decoration: none; }
+        #ap_list a:hover { text-decoration: underline; }
+        .language-switch { position: absolute; top: 20px; right: 20px; }
+        .language-switch select { padding: 5px; border-radius: 3px; border: 1px solid #ccc; }
+        .tabs { display: flex; margin-top: 20px; padding-left: 20px; border-bottom: 1px solid #ccc; }
+        .tab { padding: 10px 20px; cursor: pointer; border: 1px solid #ccc; border-bottom: none; border-radius: 5px 5px 0 0; margin-right: 5px; background-color: #f0f0f0; position: relative; top: 1px; }
+        .tab.active { background-color: #fff; }
+        .tab-content { display: none; padding: 20px; background-color: #fff; }
+        .tab-content.active { display: block; }
+        .toast { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: rgba(0, 0, 0, 0.8); color: white; padding: 15px 30px; border-radius: 8px; z-index: 1000; opacity: 0; transition: opacity 0.3s ease-in-out; min-width: 200px; text-align: center; }
+        .toast.show { opacity: 1; }
+    </style>
+</head>
+<body>
+    <div class="toast" id="toast"></div>
+    <div class="language-switch">
+        <select id="language" onchange="changeLanguage()">
+            <option value="en-US">English</option>
+            <option value="zh-CN">简体中文</option>
+            <option value="zh-TW">繁體中文</option>
+            <option value="ja-JP">日本語</option>
+        </select>
+    </div>
+    
+    <div class="tabs">
+        <div class="tab active" onclick="switchTab('wifi')" data-lang="wifi_tab">WiFi 配置</div>
+    </div>
+
+    <div id="wifi-tab" class="tab-content active">
+        <form action="/submit" method="post" onsubmit="submitForm(event)">
+            <div id="saved_list_container" style="display: none;">
+                <h3 data-lang="saved_wifi">已保存的 WiFi</h3>
+                <ul id="saved_list"></ul>
+            </div>
+            <div>
+                <h3 data-lang="new_wifi">新的 WiFi</h3>
+                <p class="error" style="color: red; text-align: center;" id="error"></p>
+                <p>
+                    <label for="ssid">SSID:</label>
+                    <input type="text" id="ssid" name="ssid" required>
+                </p>
+                <p>
+                    <label for="password" data-lang="password">密码:</label>
+                    <input type="password" id="password" name="password">
+                </p>
+                <p style="text-align: center;">
+                    <input type="submit" value="连接" id="button" data-lang-value="connect">
+                </p>
+                <p id="ap_list"></p>
+            </div>
+        </form>
+    </div>
+
+    <script type="text/javascript">
+        const button = document.getElementById('button');
+        const error = document.getElementById('error');
+        const ssid = document.getElementById('ssid');
+
+        const translations = {
+            'zh-CN': {
+                title: '网络配置', saved_wifi: '已保存的 Wi-Fi', new_wifi: '新的 Wi-Fi',
+                password: '密码:', connect: '连接', select_wifi: '从下面列表选择 2.4G Wi-Fi:',
+                wifi_tab: 'Wi-Fi 配置'
+            },
+            'zh-TW': {
+                title: '網路設定', saved_wifi: '已儲存的 Wi-Fi', new_wifi: '新的 Wi-Fi',
+                password: '密碼:', connect: '連接', select_wifi: '從下方列表選擇 2.4G Wi-Fi:',
+                wifi_tab: 'Wi-Fi 設定'
+            },
+            'en-US': {
+                title: 'Network Configuration', saved_wifi: 'Saved Wi-Fi', new_wifi: 'New Wi-Fi',
+                password: 'Password:', connect: 'Connect', select_wifi: 'Select a 2.4G Wi-Fi from the list below:',
+                wifi_tab: 'Wi-Fi Config'
+            },
+            'ja-JP': {
+                title: 'ネットワーク設定', saved_wifi: '保存済みのWi-Fi', new_wifi: '新しいWi-Fi',
+                password: 'パスワード:', connect: '接続', select_wifi: '以下のリストから2.4G Wi-Fiを選択してください:',
+                wifi_tab: 'Wi-Fi設定'
+            }
+        };
+
+        function changeLanguage() {
+            const lang = document.getElementById('language').value;
+            if (!translations[lang]) return;
+            document.title = translations[lang].title;
+            document.querySelectorAll('[data-lang]').forEach(el => {
+                const key = el.getAttribute('data-lang');
+                el.textContent = translations[lang][key];
+            });
+            document.querySelectorAll('[data-lang-value]').forEach(el => {
+                const key = el.getAttribute('data-lang-value');
+                el.value = translations[lang][key];
+            });
+            const apList = document.getElementById('ap_list');
+            if (apList.firstChild) apList.firstChild.textContent = translations[lang].select_wifi;
+            localStorage.setItem('preferred_language', lang);
+        }
+
+        function renderSavedList(data) {
+            const savedListContainer = document.getElementById('saved_list_container');
+            const savedList = document.getElementById('saved_list');
+            savedList.innerHTML = '';
+            data.forEach((ssid, index) => {
+                const li = document.createElement('li');
+                let html = `<span>${ssid}</span>`;
+                if (index > 0) {
+                    html += ` <span>
+                        <button type="button" onclick="setDefaultItem(this, ${index})">⬆️</button>
+                        <button type="button" onclick="deleteItem(this, ${index})">❌</button>
+                    </span>`;
+                } else {
+                    html += ` <span><button type="button" onclick="deleteItem(this, ${index})">❌</button></span>`;
+                }
+                li.innerHTML = html;
+                savedList.appendChild(li);
+            });
+            savedListContainer.style.display = data.length > 0 ? 'block' : 'none';
+        }
+
+        function deleteItem(item, index) {
+            item.disabled = true;
+            fetch('/saved/delete?index=' + index)
+                .then(response => response.json())
+                .then(() => loadSavedList());
+        }
+
+        function setDefaultItem(item, index) {
+            item.disabled = true;
+            fetch('/saved/set_default?index=' + index)
+                .then(response => response.json())
+                .then(() => loadSavedList());
+        }
+
+        function loadSavedList() {
+            fetch('/saved/list')
+                .then(response => response.json())
+                .then(data => renderSavedList(data));
+        }
+
+        function loadAPList() {
+            if (button.disabled) return;
+            fetch('/scan')
+                .then(response => response.json())
+                .then(data => {
+                    const lang = document.getElementById('language').value;
+                    const apList = document.getElementById('ap_list');
+                    apList.innerHTML = '<p>' + translations[lang].select_wifi + '</p>';
+                    data.forEach(ap => {
+                        const link = document.createElement('a');
+                        link.href = '#';
+                        link.textContent = ap.ssid + ' (' + ap.rssi + ' dBm)' + (ap.authmode === 0 ? ' 🌐' : ' 🔒');
+                        link.addEventListener('click', () => { ssid.value = ap.ssid; });
+                        apList.appendChild(link);
+                    });
+                    setTimeout(loadAPList, 5000);
+                });
+        }
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.getElementById(tabName + '-tab').classList.add('active');
+            document.querySelector(`.tab[onclick="switchTab('${tabName}')"]`).classList.add('active');
+        }
+
+        async function submitForm(event) {
+            event.preventDefault();
+            button.disabled = true;
+            error.textContent = '';
+            const payload = {
+                ssid: ssid.value,
+                password: document.getElementById('password').value
+            };
+            try {
+                const response = await fetch('/submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await response.json();
+                if (!data.success) throw new Error(data.error || '连接失败');
+                window.location.href = '/done.html';
+            } catch (err) {
+                error.textContent = err.message;
+            } finally {
+                button.disabled = false;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const langParam = urlParams.get('lang');
+            const browserLang = navigator.language || navigator.userLanguage;
+            const languageMap = {
+                'zh': 'zh-CN', 'zh-CN': 'zh-CN', 'zh-TW': 'zh-TW', 'zh-HK': 'zh-TW',
+                'ja': 'ja-JP', 'ja-JP': 'ja-JP', 'en': 'en-US', 'en-US': 'en-US',
+                'en-GB': 'en-US', 'en-CA': 'en-US', 'en-AU': 'en-US'
+            };
+            const getSupportedLanguage = lang => languageMap[lang] || languageMap[lang.split('-')[0]] || 'en-US';
+            const savedLang = langParam || localStorage.getItem('preferred_language') || getSupportedLanguage(browserLang);
+            document.getElementById('language').value = savedLang;
+            changeLanguage();
+            loadSavedList();
+            loadAPList();
+        });
+
+        window.addEventListener('pageshow', event => {
+            if (event.persisted) loadSavedList();
+        });
+    </script>
+</body>
+</html>
